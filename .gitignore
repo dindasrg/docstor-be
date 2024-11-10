@@ -1,0 +1,5 @@
+# Database config
+config/service-account-key.json
+
+# Environment files
+*.env
