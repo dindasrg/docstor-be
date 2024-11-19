@@ -3,20 +3,25 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 
+	"docstor-be/internal/document"
 	"docstor-be/internal/user"
 )
 
-type Router struct {
-	UserHandler *user.UserHandler
-}
-
-func NewRouter(userHandler *user.UserHandler) *gin.Engine {
+func NewRouter(userHandler *user.UserHandler, documentHandler *document.DocumentHandler) *gin.Engine {
 	// create new gin router
 	r := gin.Default()
 
-	// auth routes
-	r.POST("/login", userHandler.Login)
-	r.POST("/register", userHandler.Register)
+	// Setup user routes
+	authRoutes := r.Group("/auth")
+	{
+		authRoutes.POST("/login", userHandler.Login)
+		authRoutes.POST("/register", userHandler.Register)
+	}
 
+	// Setup document routes
+	documentRoutes := r.Group("/document")
+	{
+		documentRoutes.GET("/ws", documentHandler.HandleWebSocketConnection)
+	}
 	return r
 }

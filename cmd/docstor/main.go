@@ -12,6 +12,7 @@ import (
 
 	"docstor-be/api/router"
 	"docstor-be/internal/db"
+	"docstor-be/internal/document"
 	"docstor-be/internal/user"
 
 	"github.com/joho/godotenv"
@@ -78,12 +79,14 @@ func main() {
 		DB:       dbConn,
 		FireAuth: authClient,
 	}
+	documentService := document.NewDocumentService()
 
 	// setup handler
 	userHandler := user.NewUserHandler(userService)
+	documentHandler := document.NewDocumentHandler(documentService)
 
 	// setup http router
-	r := router.NewRouter(userHandler)
+	r := router.NewRouter(userHandler, documentHandler)
 
 	r.Run(":8080")
 }
